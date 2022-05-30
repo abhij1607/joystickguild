@@ -13,7 +13,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const PrivateRoute = () => {
-  const token = useSelector((store) => store.authDetails);
+  const { token } = useSelector((store) => store.authDetails);
   const location = useLocation();
 
   return token ? (
