@@ -10,7 +10,7 @@ import { auth } from "./config";
 export const signup = createAsyncThunk(
   "userDetails/signup",
   async (signupFormData) => {
-    const { firstName, lastName, userName, email, password } = signFormData;
+    const { email, password } = signupFormData;
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
@@ -20,7 +20,7 @@ export const signup = createAsyncThunk(
       console.log(user);
       return user.uid;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 );
@@ -34,7 +34,7 @@ export const login = createAsyncThunk(
       console.log(user);
       return user.uid;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 );
