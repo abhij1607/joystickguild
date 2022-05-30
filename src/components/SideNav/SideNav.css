@@ -1,0 +1,6 @@
+a.navlink {
+  gap: 12px;
+  color: black;
+  text-align: left;
+  justify-content: flex-start;
+}
