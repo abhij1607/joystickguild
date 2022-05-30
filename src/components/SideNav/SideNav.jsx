@@ -8,6 +8,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./SideNav.css";
 
 import { NavLink } from "react-router-dom";
+import { logout } from "../../firebase/firebase-auth";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "features/auth/authSlice";
 
 const useStyles = makeStyles({
   link: {
@@ -27,6 +30,12 @@ const SidebarLink = ({ text, Icon, url }) => {
 };
 
 export const SideNav = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    await logout();
+    dispatch(logoutUser());
+  };
   return (
     <Stack spacing={3}>
       <SidebarLink Icon={HomeOutlinedIcon} text="Home" url="/" />
@@ -51,6 +60,7 @@ export const SideNav = () => {
         align="center"
         variant="outlined"
         color="primary"
+        onClick={handleLogout}
         fullWidth
       >
         Logout
