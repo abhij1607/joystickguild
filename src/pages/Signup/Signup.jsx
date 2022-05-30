@@ -1,6 +1,6 @@
 import { Button, Grid, Paper, TextField, Typography } from "@material-ui/core";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { handleFormChange } from "utils/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../firebase/firebase-auth";
@@ -26,16 +26,11 @@ export const Signup = () => {
 
     try {
       await dispatch(signup(formData));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    if (isSignupStatus === "loading") console.log("loading");
-    if (isSignupStatus === "fulfilled") navigate("/");
-    if (isSignupStatus === "rejected") console.log("rej");
-  }, [isSignupStatus]);
 
   return (
     <Grid>
