@@ -31,7 +31,6 @@ export const login = createAsyncThunk(
     const { email, password } = loginFormData;
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      console.log(user);
       return user.uid;
     } catch (error) {
       throw error;

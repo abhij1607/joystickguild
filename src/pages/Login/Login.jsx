@@ -10,7 +10,7 @@ import {
 import { Stack } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { handleFormChange } from "utils/auth";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../firebase/firebase-auth";
 
@@ -36,16 +36,11 @@ const Login = () => {
     e.preventDefault();
     try {
       dispatch(login(formData));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    if (isLoginStatus === "loading") console.log("loading");
-    if (isLoginStatus === "fulfilled") navigate("/");
-    if (isLoginStatus === "rejected") console.log("rej");
-  }, [isLoginStatus]);
 
   return (
     <Grid>
