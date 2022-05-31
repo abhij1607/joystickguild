@@ -4,7 +4,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Box, CardActionArea, Button } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-
+import { EditProfileModal } from "components/Profile/EditProfileModal";
 export const ProfileHeader = () => {
   return (
     <>
@@ -33,7 +33,7 @@ export const ProfileHeader = () => {
             </Box>
 
             <Box sx={{ display: "flex", flexDirection: "row-reverse" }} mb={4}>
-              <Button variant="outlined">Edit profile</Button>
+              <EditProfileModal />
             </Box>
 
             <Typography variant="h5" component="div">
