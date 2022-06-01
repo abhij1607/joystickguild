@@ -6,11 +6,12 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "./config";
+import { createUser } from "./firestore-requests";
 
 export const signup = createAsyncThunk(
   "userDetails/signup",
   async (signupFormData) => {
-    const { email, password } = signupFormData;
+    const { firstName, lastName, email, password } = signupFormData;
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
@@ -18,6 +19,7 @@ export const signup = createAsyncThunk(
         password
       );
       console.log(user);
+      await createUser(firstName, lastName, email, user.uid);
       return user.uid;
     } catch (error) {
       throw error;
