@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchUserDetailss } from "../../firebase/firestore-requests";
 
 const initialState = {
   userDetails: {
@@ -17,13 +18,24 @@ const userSlice = createSlice({
   name: "userDetails",
   initialState,
   reducers: {
-    updateUserDetails: (state, action) => {
+    updateUserDetailsState: (state, action) => {
       state.userDetails = { ...state.userDetails, ...action.payload };
     },
   },
-  extraReducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserDetailss.pending, (state) => {
+      state.userDetailsLoading = "loading";
+    });
+    builder.addCase(fetchUserDetailss.fulfilled, (state, action) => {
+      state.userDetailsLoading = "fulfilled";
+      state.userDetails = action.payload;
+    });
+    builder.addCase(fetchUserDetailss.rejected, (state) => {
+      state.userDetailsLoading = "rejected";
+    });
+  },
 });
 
-export const { updateUserDetails } = userSlice.actions;
+export const { updateUserDetailsState } = userSlice.actions;
 
 export default userSlice.reducer;
