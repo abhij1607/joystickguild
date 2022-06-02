@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { EditProfileModal } from "components/Profile/EditProfileModal";
 import { useSelector } from "react-redux";
@@ -25,14 +25,14 @@ export const ProfileHeader = () => {
           component="img"
           height="160"
           image={coverPicture || "https://picsum.photos/seed/picsum/556/140"}
-          alt="green iguana"
+          alt="cover picture"
         />
         <CardContent>
           <Box
             sx={{
               display: "inline-flex",
               position: "absolute",
-              top: "85px",
+              top: "95px",
               justifyContent: "space-between",
             }}
           >
@@ -43,7 +43,7 @@ export const ProfileHeader = () => {
             />
           </Box>
 
-          <Box sx={{ display: "flex", flexDirection: "row-reverse" }} mb={4}>
+          <Box sx={{ display: "flex", flexDirection: "row-reverse" }} mb={2}>
             <EditProfileModal />
           </Box>
 
@@ -56,9 +56,9 @@ export const ProfileHeader = () => {
           <Typography variant="body2" color="text.secondary">
             {bio}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Link variant="caption" underline="hover" color="text.secondary">
             {website}
-          </Typography>
+          </Link>
         </CardContent>
       </Card>
     </>
