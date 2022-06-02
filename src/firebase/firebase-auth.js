@@ -5,8 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "./config";
 import { createUser } from "./firestore-requests";
+import { auth } from "./config";
 
 export const signup = createAsyncThunk(
   "userDetails/signup",
