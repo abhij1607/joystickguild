@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -6,9 +8,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Card from "@mui/material/Card";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
 import { Stack } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { handleFormChange } from "utils/auth";
+import { updateUserDetails } from "../../firebase/firestore-requests";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,8 +28,43 @@ const style = {
 
 export const EditProfileModal = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+
+  const {
+    userDetails: {
+      firstName,
+      lastName,
+      email,
+      bio,
+      website,
+      coverPicture,
+      profilePicture,
+    },
+  } = useSelector((store) => store.userDetails);
+
+  const initialFormData = {
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    bio: bio,
+    website: website,
+    coverPicture: coverPicture,
+    profilePicture: profilePicture,
+  };
+  const [formData, setFormData] = useState(initialFormData);
+  const { token } = useSelector((store) => store.authDetails);
+  const dispatch = useDispatch();
+
+  const handleOpen = () => {
+    setOpen(true);
+    setFormData(initialFormData);
+  };
   const handleClose = () => setOpen(false);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    await updateUserDetails(token, formData, dispatch);
+    handleClose();
+  };
 
   return (
     <div>
@@ -35,14 +74,13 @@ export const EditProfileModal = () => {
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby="modal-Edit profile"
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Edit Profile
           </Typography>
-          <form>
+          <form onSubmit={submitHandler}>
             <Card
               sx={{
                 marginBottom: "10px",
@@ -117,12 +155,16 @@ export const EditProfileModal = () => {
                 label="First Name"
                 variant="outlined"
                 name="firstName"
+                value={formData.firstName}
+                onChange={(e) => handleFormChange(e, setFormData)}
                 fullWidth
               />
               <TextField
                 label="Last Name"
                 variant="outlined"
-                name="LastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={(e) => handleFormChange(e, setFormData)}
                 fullWidth
               />
               <TextField
@@ -130,15 +172,26 @@ export const EditProfileModal = () => {
                 variant="outlined"
                 type="email"
                 name="email"
+                value={formData.email}
+                onChange={(e) => handleFormChange(e, setFormData)}
                 fullWidth
               />
               <TextField
                 label="Website"
                 variant="outlined"
                 name="website"
+                value={formData.website}
+                onChange={(e) => handleFormChange(e, setFormData)}
                 fullWidth
               />
-              <TextField label="Bio" variant="outlined" name="bio" fullWidth />
+              <TextField
+                label="Bio"
+                variant="outlined"
+                name="bio"
+                value={formData.bio}
+                onChange={(e) => handleFormChange(e, setFormData)}
+                fullWidth
+              />
             </Stack>
             <Stack direction="row" spacing={4} mt={2}>
               <Button
