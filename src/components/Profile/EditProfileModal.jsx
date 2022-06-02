@@ -40,6 +40,7 @@ export const EditProfileModal = () => {
       profilePicture,
     },
   } = useSelector((store) => store.userDetails);
+  const { token } = useSelector((store) => store.authDetails);
 
   const initialFormData = {
     firstName: firstName,
@@ -51,7 +52,6 @@ export const EditProfileModal = () => {
     profilePicture: profilePicture,
   };
   const [formData, setFormData] = useState(initialFormData);
-  const { token } = useSelector((store) => store.authDetails);
   const dispatch = useDispatch();
 
   const handleOpen = () => {
@@ -59,6 +59,26 @@ export const EditProfileModal = () => {
     setFormData(initialFormData);
   };
   const handleClose = () => setOpen(false);
+
+  const handleImageUpload = async (e, field) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      formData.append("upload_preset", "ml_default");
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dj3kfin8l/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      setFormData((state) => ({ ...state, [field]: data.url }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -93,7 +113,10 @@ export const EditProfileModal = () => {
                 <CardMedia
                   component="img"
                   height="160"
-                  image="https://picsum.photos/seed/picsum/556/140"
+                  image={
+                    formData.coverPicture ||
+                    "https://picsum.photos/seed/picsum/556/140"
+                  }
                   alt="green iguana"
                 />
                 <label
@@ -112,6 +135,7 @@ export const EditProfileModal = () => {
                     aria-label="Select cover Picture"
                     name="cover"
                     id="cover"
+                    onChange={(e) => handleImageUpload(e, "coverPicture")}
                     hidden
                   />
                 </label>
@@ -125,8 +149,8 @@ export const EditProfileModal = () => {
                 }}
               >
                 <Avatar
-                  alt="Remy Sharp"
-                  src="https://picsum.photos/800"
+                  alt={formData.firstName}
+                  src={formData.profilePicture}
                   sx={{ width: 152, height: 152 }}
                 />
                 <label
@@ -145,6 +169,7 @@ export const EditProfileModal = () => {
                     aria-label="Select Profile Picture"
                     name="profile"
                     id="profile"
+                    onChange={(e) => handleImageUpload(e, "profilePicture")}
                     hidden
                   />
                 </label>
