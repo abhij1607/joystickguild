@@ -1,3 +1,11 @@
+import { ProfileHeader } from "components/Profile/ProfileHeader";
+import { ProfileTabs } from "components/Profile/ProfileTabs";
+
 export const Profile = () => {
-  return <h1>Profile</h1>;
+  return (
+    <>
+      <ProfileHeader />
+      <ProfileTabs />
+    </>
+  );
 };
