@@ -31,13 +31,15 @@ export const EditProfileModal = () => {
 
   const {
     userDetails: {
-      firstName,
-      lastName,
-      email,
-      bio,
-      website,
-      coverPicture,
-      profilePicture,
+      userData: {
+        firstName,
+        lastName,
+        email,
+        bio,
+        website,
+        coverPicture,
+        profilePicture,
+      },
     },
   } = useSelector((store) => store.userDetails);
   const { token } = useSelector((store) => store.authDetails);

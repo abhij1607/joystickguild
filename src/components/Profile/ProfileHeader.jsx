@@ -9,13 +9,15 @@ import { useSelector } from "react-redux";
 export const ProfileHeader = () => {
   const {
     userDetails: {
-      firstName,
-      lastName,
-      email,
-      bio,
-      website,
-      coverPicture,
-      profilePicture,
+      userData: {
+        firstName,
+        lastName,
+        email,
+        bio,
+        website,
+        coverPicture,
+        profilePicture,
+      },
     },
   } = useSelector((store) => store.userDetails);
   return (
