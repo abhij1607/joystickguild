@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import { Grid, Paper, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { WhoToFollow } from "components/WhoToFollow/WhoToFollow";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "#fff",
@@ -43,7 +44,9 @@ export const PrivateRoute = () => {
           </Item>
         </Grid>
         <Grid item xs>
-          <Item>Who to follow</Item>
+          <Item>
+            <WhoToFollow />
+          </Item>
         </Grid>
       </Grid>
     </Container>

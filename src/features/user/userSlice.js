@@ -3,13 +3,7 @@ import { fetchUserDetailss } from "../../firebase/firestore-requests";
 
 const initialState = {
   userDetails: {
-    firstName: "",
-    lastName: "",
-    email: "",
-    bio: "",
-    website: "",
-    profilePicture: "",
-    coverPicture: "",
+    userData: {},
   },
   userDetailsLoading: "idle",
 };
@@ -19,7 +13,24 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateUserDetailsState: (state, action) => {
-      state.userDetails = { ...state.userDetails, ...action.payload };
+      state.userDetails.userData = {
+        ...state.userDetails.userData,
+        ...action.payload,
+      };
+    },
+
+    updateUserFollowing: (state, action) => {
+      state.userDetails.following = {
+        following: [...state.userDetails.following.following, action.payload],
+      };
+    },
+
+    updateUserUnfollow: (state, action) => {
+      state.userDetails.following = {
+        following: state.userDetails.following.following.filter(
+          (_user) => _user !== action.payload
+        ),
+      };
     },
   },
   extraReducers: (builder) => {
@@ -36,6 +47,10 @@ const userSlice = createSlice({
   },
 });
 
-export const { updateUserDetailsState } = userSlice.actions;
+export const {
+  updateUserDetailsState,
+  updateUserFollowing,
+  updateUserUnfollow,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,9 +1,11 @@
-import * as React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+
+import { useSelector } from "react-redux";
+import { SuggestedUserCard } from "components/SuggestedUserCard/SuggestedUserCard";
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -18,7 +20,7 @@ const TabPanel = (props) => {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -38,8 +40,37 @@ function a11yProps(index) {
   };
 }
 
+export const Posts = () => {
+  return <div>Posts</div>;
+};
+
+export const Connections = ({ users, token, followingUsers = [] }) => {
+  return users.map((user) => (
+    <SuggestedUserCard
+      key={user.id}
+      user={user}
+      token={token}
+      isFollowing={followingUsers.includes(user.id)}
+    />
+  ));
+};
+
 export const ProfileTabs = () => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+
+  const { token } = useSelector((store) => store.authDetails);
+
+  const {
+    userDetails: { following, followers },
+  } = useSelector((store) => store.userDetails);
+  const { users } = useSelector((store) => store.allUsers);
+
+  const followingUsers = users.filter((user) =>
+    following?.following.includes(user.id)
+  );
+  const followerUsers = users.filter((user) =>
+    followers?.followers.includes(user.id)
+  );
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,19 +85,27 @@ export const ProfileTabs = () => {
           variant="fullWidth"
           aria-label="basic tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="Post" {...a11yProps(0)} />
+          <Tab label="Following" {...a11yProps(1)} />
+          <Tab label="Followers" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        Item One
+        <Posts />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <Connections
+          users={followingUsers}
+          token={token}
+          followingUsers={following?.following}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <Connections
+          users={followerUsers}
+          token={token}
+          followingUsers={following?.following}
+        />
       </TabPanel>
     </Box>
   );

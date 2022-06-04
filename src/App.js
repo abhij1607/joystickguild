@@ -12,15 +12,23 @@ import { Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "components/PrivateRoute/PrivateRoute";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserDetailss } from "./firebase/firestore-requests";
+import {
+  fetchUserDetailss,
+  fetchAllUsers,
+} from "./firebase/firestore-requests";
 
 function App() {
   const { token } = useSelector((store) => store.authDetails);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserDetailss(token));
+    if (token) dispatch(fetchUserDetailss(token));
   }, [token, dispatch]);
+
+  useEffect(() => {
+    if (token) dispatch(fetchAllUsers());
+  }, [token, dispatch]);
+
   return (
     <div className="App">
       <Routes>
