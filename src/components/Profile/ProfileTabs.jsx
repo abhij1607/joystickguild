@@ -44,13 +44,13 @@ export const Posts = () => {
   return <div>Posts</div>;
 };
 
-export const Connections = ({ users, token, isFollowing }) => {
+export const Connections = ({ users, token, followingUsers = [] }) => {
   return users.map((user) => (
     <SuggestedUserCard
       key={user.id}
       user={user}
       token={token}
-      isFollowing={isFollowing}
+      isFollowing={followingUsers.includes(user.id)}
     />
   ));
 };
@@ -94,10 +94,18 @@ export const ProfileTabs = () => {
         <Posts />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Connections users={followingUsers} token={token} isFollowing={true} />
+        <Connections
+          users={followingUsers}
+          token={token}
+          followingUsers={following?.following}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Connections users={followerUsers} token={token} isFollowing={false} />
+        <Connections
+          users={followerUsers}
+          token={token}
+          followingUsers={following?.following}
+        />
       </TabPanel>
     </Box>
   );
