@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchUserDetailss } from "../../firebase/firestore-requests";
 
 const initialState = {
-  userDetails: {},
+  userDetails: {
+    userData: {},
+  },
   userDetailsLoading: "idle",
 };
 
