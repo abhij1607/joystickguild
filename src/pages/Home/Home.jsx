@@ -1,4 +1,6 @@
+import { AddPost } from "components/AddPost/AddPost";
+
 const Home = () => {
-  return <h1>Home</h1>;
+  return <AddPost />;
 };
 export { Home };
