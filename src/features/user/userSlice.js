@@ -32,6 +32,13 @@ const userSlice = createSlice({
         ),
       };
     },
+
+    addUserPost: (state, action) => {
+      state.userDetails.posts.posts = [
+        ...state.userDetails.posts.posts,
+        action.payload,
+      ];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserDetailss.pending, (state) => {
@@ -51,6 +58,7 @@ export const {
   updateUserDetailsState,
   updateUserFollowing,
   updateUserUnfollow,
+  addUserPost,
 } = userSlice.actions;
 
 export default userSlice.reducer;
