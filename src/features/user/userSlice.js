@@ -3,7 +3,21 @@ import { fetchUserDetailss } from "../../firebase/firestore-requests";
 
 const initialState = {
   userDetails: {
-    userData: {},
+    userData: {
+      bio: "",
+      coverPicture: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      profilePicture: "",
+      website: "",
+    },
+    followers: { followers: [] },
+    following: { following: [] },
+    likedPost: { likedPost: [] },
+    bookmarks: { bookmarks: [] },
+    notifications: { notifications: [] },
+    posts: { posts: [] },
   },
   userDetailsLoading: "idle",
 };
@@ -39,6 +53,17 @@ const userSlice = createSlice({
         action.payload,
       ];
     },
+    updateUserLikedPost: (state, action) => {
+      state.userDetails.likedPost.likedPost = [
+        ...state.userDetails.likedPost.likedPost,
+        action.payload,
+      ];
+    },
+    updateUserUnlikedPost: (state, action) => {
+      state.userDetails.likedPost.likedPost = state.userDetails.likedPost.likedPost.filter(
+        (_id) => _id !== action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserDetailss.pending, (state) => {
@@ -59,6 +84,8 @@ export const {
   updateUserFollowing,
   updateUserUnfollow,
   addUserPost,
+  updateUserLikedPost,
+  updateUserUnlikedPost,
 } = userSlice.actions;
 
 export default userSlice.reducer;

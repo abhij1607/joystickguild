@@ -12,6 +12,7 @@ import {
   addDoc,
   query,
   orderBy,
+  increment,
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -168,3 +169,46 @@ export const fetchAllPosts = createAsyncThunk(
     return posts;
   }
 );
+
+export const requestLikePost = async (postId, userId, postBy) => {
+  try {
+    const userLikedPostRef = doc(db, userId, "likedPost");
+    const postDocRef = doc(db, "posts", postId);
+    const postByUserNotificationRef = doc(db, postBy, "notifications");
+
+    await updateDoc(postByUserNotificationRef, {
+      notifications: arrayUnion({
+        notificationType: "like",
+        postId,
+        notificationDetails: userId,
+      }),
+    });
+
+    await updateDoc(userLikedPostRef, {
+      likedPost: arrayUnion(postId),
+    });
+
+    await updateDoc(postDocRef, {
+      likes: increment(1),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestUnlikePost = async (postId, userId) => {
+  try {
+    const userLikedPostRef = doc(db, userId, "likedPost");
+    const postDocRef = doc(db, "posts", postId);
+
+    await updateDoc(userLikedPostRef, {
+      likedPost: arrayRemove(postId),
+    });
+
+    await updateDoc(postDocRef, {
+      likes: increment(-1),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

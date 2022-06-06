@@ -1,18 +1,51 @@
-import {
-  Typography,
-  Stack,
-  IconButton,
-  Avatar,
-  Button,
-  Box,
-} from "@mui/material";
+import { Typography, Stack, IconButton, Avatar, Button } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentIcon from "@mui/icons-material/Comment";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CardMedia from "@mui/material/CardMedia";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { updateLikedPost } from "features/post/postSlice";
+import {
+  requestLikePost,
+  requestUnlikePost,
+} from "../../firebase/firestore-requests";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  updateUserLikedPost,
+  updateUserUnlikedPost,
+} from "features/user/userSlice";
 
 export const Post = ({ post }) => {
-  console.log(post);
+  const {
+    userDetails: { likedPost },
+  } = useSelector((store) => store.userDetails);
+  const { token } = useSelector((store) => store.authDetails);
+  const { users } = useSelector((store) => store.allUsers);
+
+  const dispatch = useDispatch();
+
+  const isLiked = likedPost?.likedPost?.some((_id) => _id === post?.id);
+  const postBy = users.find((user) => user.id === post?.data.postBy);
+
+  const handleLike = async (e) => {
+    try {
+      await requestLikePost(post.id, token, postBy.id);
+      dispatch(updateLikedPost({ id: post.id, count: 1 }));
+      dispatch(updateUserLikedPost(post.id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleUnLike = async (e) => {
+    try {
+      await requestUnlikePost(post.id, token, postBy.id);
+      dispatch(updateLikedPost({ id: post.id, count: -1 }));
+      dispatch(updateUserUnlikedPost(post.id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Stack direction="row">
       <Button style={{ alignItems: "baseline" }}>
@@ -39,9 +72,15 @@ export const Post = ({ post }) => {
           alignItems="center"
           spacing={2}
         >
-          <IconButton>
-            <FavoriteBorderIcon />
-          </IconButton>
+          {isLiked ? (
+            <IconButton onClick={handleUnLike}>
+              <FavoriteIcon />
+            </IconButton>
+          ) : (
+            <IconButton onClick={handleLike}>
+              <FavoriteBorderIcon />
+            </IconButton>
+          )}
           <IconButton>
             <CommentIcon />
           </IconButton>
