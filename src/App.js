@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUserDetailss,
   fetchAllUsers,
+  fetchAllPosts,
 } from "./firebase/firestore-requests";
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
     if (token) dispatch(fetchAllUsers());
   }, [token, dispatch]);
 
+  useEffect(() => {
+    if (token) dispatch(fetchAllPosts());
+  }, [token, dispatch]);
   return (
     <div className="App">
       <Routes>

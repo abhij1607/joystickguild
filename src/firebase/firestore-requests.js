@@ -9,6 +9,9 @@ import {
   collection,
   arrayUnion,
   arrayRemove,
+  addDoc,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -124,3 +127,44 @@ export const unfollowUser = async (unfollowedUserId, userId) => {
     console.log(error);
   }
 };
+
+export const addNewPost = async (userId, postText, postImage) => {
+  try {
+    const userPostsRef = doc(db, userId, "posts");
+
+    const docRef = await addDoc(collection(db, "posts"), {
+      postBy: userId,
+      postText: postText,
+      postImageUrl: postImage.url,
+      postImageName: postImage.fileName || "",
+      dateCreated: Date.now(),
+      likes: 0,
+      comments: [],
+    });
+
+    await updateDoc(userPostsRef, { posts: arrayUnion(docRef.id) });
+
+    return docRef.id;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchAllPosts = createAsyncThunk(
+  "posts/getAllPosts/",
+  async () => {
+    const posts = [];
+
+    const postsRef = collection(db, "posts");
+
+    const q = query(postsRef, orderBy("dateCreated", "desc"));
+
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      posts.push({ id: doc.id, data: doc.data() });
+    });
+
+    return posts;
+  }
+);
