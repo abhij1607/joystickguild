@@ -17,7 +17,7 @@ import {
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 
-const initialPostImageStatus = { url: "", fileName: "" };
+const initialPostImageState = { url: "", fileName: "" };
 
 export const AddPost = ({}) => {
   const {
@@ -34,7 +34,7 @@ export const AddPost = ({}) => {
 
   const [postText, setPostText] = useState("");
 
-  const [postImage, setPostImage] = useState("");
+  const [postImage, setPostImage] = useState(initialPostImageState);
 
   const [chosenEmoji, setChosenEmoji] = useState(false);
 
@@ -69,7 +69,7 @@ export const AddPost = ({}) => {
       dispatch(addUserPost(postId));
       dispatch(fetchAllPosts());
       setPostText("");
-      setPostImage(initialPostImageStatus);
+      setPostImage(initialPostImageState);
       setChosenEmoji(false);
     } catch (error) {
       console.log(error);
