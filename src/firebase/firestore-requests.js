@@ -212,3 +212,27 @@ export const requestUnlikePost = async (postId, userId) => {
     console.log(error);
   }
 };
+
+export const requestPostBookmark = async (postId, userId) => {
+  try {
+    const bookmarkDocRef = doc(db, userId, "bookmarks");
+
+    await updateDoc(bookmarkDocRef, {
+      bookmarks: arrayUnion(postId),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestRemovePostFromBookmark = async (postId, userId) => {
+  try {
+    const bookmarkDocRef = doc(db, userId, "bookmarks");
+
+    await updateDoc(bookmarkDocRef, {
+      bookmarks: arrayRemove(postId),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

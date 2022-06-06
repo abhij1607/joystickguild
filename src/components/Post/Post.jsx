@@ -4,29 +4,35 @@ import CommentIcon from "@mui/icons-material/Comment";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CardMedia from "@mui/material/CardMedia";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import { updateLikedPost } from "features/post/postSlice";
 import {
   requestLikePost,
   requestUnlikePost,
+  requestPostBookmark,
+  requestRemovePostFromBookmark,
 } from "../../firebase/firestore-requests";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   updateUserLikedPost,
   updateUserUnlikedPost,
+  updateUserBookmarkedPost,
+  updateUserRemoveBookmarkedPost,
 } from "features/user/userSlice";
 
 export const Post = ({ post }) => {
   const {
-    userDetails: { likedPost },
+    userDetails: { likedPost, bookmarks },
   } = useSelector((store) => store.userDetails);
   const { token } = useSelector((store) => store.authDetails);
   const { users } = useSelector((store) => store.allUsers);
 
   const dispatch = useDispatch();
 
-  const isLiked = likedPost?.likedPost?.some((_id) => _id === post?.id);
   const postBy = users.find((user) => user.id === post?.data.postBy);
+  const isLiked = likedPost?.likedPost?.some((_id) => _id === post?.id);
+  const isBookmarked = bookmarks?.bookmarks?.some((_id) => _id === post?.id);
 
   const handleLike = async (e) => {
     try {
@@ -42,6 +48,22 @@ export const Post = ({ post }) => {
       await requestUnlikePost(post.id, token, postBy.id);
       dispatch(updateLikedPost({ id: post.id, count: -1 }));
       dispatch(updateUserUnlikedPost(post.id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleBookmarkPost = async (e) => {
+    try {
+      await requestPostBookmark(post.id, token, postBy.id);
+      dispatch(updateUserBookmarkedPost(post.id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleRemoveFromBookmarksPost = async (e) => {
+    try {
+      await requestRemovePostFromBookmark(post.id, token, postBy.id);
+      dispatch(updateUserRemoveBookmarkedPost(post.id));
     } catch (error) {
       console.log(error);
     }
@@ -84,9 +106,15 @@ export const Post = ({ post }) => {
           <IconButton>
             <CommentIcon />
           </IconButton>
-          <IconButton>
-            <BookmarkBorderIcon />
-          </IconButton>
+          {isBookmarked ? (
+            <IconButton onClick={handleRemoveFromBookmarksPost}>
+              <BookmarkIcon />
+            </IconButton>
+          ) : (
+            <IconButton onClick={handleBookmarkPost}>
+              <BookmarkBorderIcon />
+            </IconButton>
+          )}
         </Stack>
       </Stack>
     </Stack>
