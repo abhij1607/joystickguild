@@ -55,6 +55,23 @@ const postSlice = createSlice({
         return post;
       });
     },
+    updateDataInPost: (state, action) => {
+      state.posts = state.posts.map((post) => {
+        if (post.id === action.payload.id) {
+          return {
+            ...post,
+            data: {
+              ...post.data,
+              postText: action.payload.postText,
+              postImageUrl: action.payload.postImage.url,
+              postImageName: action.payload.postImage.postImageName,
+            },
+          };
+        }
+
+        return post;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllPosts.fulfilled, (state, action) => {
@@ -67,6 +84,7 @@ export const {
   updateLikedPost,
   updateCommentInPost,
   deleteCommentInPost,
+  updateDataInPost,
 } = postSlice.actions;
 
 export default postSlice.reducer;
