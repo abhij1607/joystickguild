@@ -23,6 +23,38 @@ const postSlice = createSlice({
         return post;
       });
     },
+
+    updateCommentInPost: (state, action) => {
+      state.posts = state.posts.map((post) => {
+        if (post.id === action.payload.id) {
+          return {
+            ...post,
+            data: {
+              ...post.data,
+              comments: [...post.data.comments, action.payload.comment],
+            },
+          };
+        }
+        return post;
+      });
+    },
+
+    deleteCommentInPost: (state, action) => {
+      state.posts = state.posts.map((post) => {
+        if (post.id === action.payload.id) {
+          return {
+            ...post,
+            data: {
+              ...post.data,
+              comments: post.data.comments.filter(
+                (_comment) => _comment.commentId !== action.payload.commentId
+              ),
+            },
+          };
+        }
+        return post;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllPosts.fulfilled, (state, action) => {
@@ -31,6 +63,10 @@ const postSlice = createSlice({
   },
 });
 
-export const { updateLikedPost } = postSlice.actions;
+export const {
+  updateLikedPost,
+  updateCommentInPost,
+  deleteCommentInPost,
+} = postSlice.actions;
 
 export default postSlice.reducer;
