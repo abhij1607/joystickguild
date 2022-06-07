@@ -236,3 +236,36 @@ export const requestRemovePostFromBookmark = async (postId, userId) => {
     console.log(error);
   }
 };
+
+export const requestAddComment = async (postId, comment, postBy) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+    const postByUserNotificationRef = doc(db, postBy, "notifications");
+
+    await updateDoc(postByUserNotificationRef, {
+      notifications: arrayUnion({
+        notificationType: "comment",
+        postId,
+        notificationDetails: comment.commentBy,
+      }),
+    });
+
+    await updateDoc(postRef, {
+      comments: arrayUnion(comment),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestDeleteComment = async (postId, comment) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+
+    await updateDoc(postRef, {
+      comments: arrayRemove(comment),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
