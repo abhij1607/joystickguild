@@ -115,6 +115,7 @@ export const Post = ({ post }) => {
   };
 
   const handleReply = async () => {
+    if (commentText === "") return;
     try {
       const comment = {
         commentId: uuid(),
