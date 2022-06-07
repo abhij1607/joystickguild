@@ -170,18 +170,32 @@ export const Post = ({ post }) => {
           >
             {isLiked ? (
               <IconButton onClick={handleUnLike}>
-                <FavoriteIcon />
-                {post?.data?.likes}
+                <FavoriteIcon color="error" />
+                <Typography variant="subtitle1">
+                  {" "}
+                  {post?.data?.likes}
+                </Typography>
               </IconButton>
             ) : (
               <IconButton onClick={handleLike}>
                 <FavoriteBorderIcon />
-                {post?.data?.likes > 0 && post?.data?.likes}
+
+                {post?.data?.likes > 0 && (
+                  <Typography variant="subtitle1">
+                    {" "}
+                    {post?.data?.likes}{" "}
+                  </Typography>
+                )}
               </IconButton>
             )}
             <IconButton onClick={toggleComments}>
               <CommentIcon />{" "}
-              {post?.data?.comments.length > 0 && post?.data?.comments.length}
+              {post?.data?.comments.length > 0 && (
+                <Typography variant="subtitle1">
+                  {" "}
+                  {post?.data?.comments.length}
+                </Typography>
+              )}
             </IconButton>
             {isBookmarked ? (
               <IconButton onClick={handleRemoveFromBookmarksPost}>
