@@ -9,6 +9,9 @@ import {
   List,
 } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Modal from "@mui/material/Modal";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -16,6 +19,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import CardMedia from "@mui/material/CardMedia";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   updateLikedPost,
   updateCommentInPost,
@@ -39,6 +43,8 @@ import {
 } from "features/user/userSlice";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
+
+import { EditPost } from "components/EditPost/EditPost";
 
 export const Post = ({ post }) => {
   const [isCommentsActive, setIsCommentsActive] = useState(false);
@@ -118,7 +124,16 @@ export const Post = ({ post }) => {
         </Button>
 
         <Stack width="100%">
-          <Typography variant="caption">{postBy?.data?.email}</Typography>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+          >
+            <Typography variant="caption">{postBy?.data?.email}</Typography>
+            {postBy?.id === token && <MenuPanel post={post} />}
+          </Box>
+
           <Typography variant="body1" component="p">
             {post?.data?.postText}
           </Typography>
@@ -207,5 +222,84 @@ export const Post = ({ post }) => {
         </Box>
       )}
     </Box>
+  );
+};
+
+const MenuPanel = ({ post }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleDelete = () => {
+    handleClose();
+  };
+  return (
+    <div>
+      <IconButton
+        size="small"
+        sx={{ alignItems: "flex-start" }}
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem>
+          <EditPostModal post={post} handleMenuClose={handleClose} />
+        </MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+      </Menu>
+    </div>
+  );
+};
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+const EditPostModal = ({ handleMenuClose, post }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    handleMenuClose();
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <div onClick={handleOpen}>Edit</div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <EditPost post={post} />
+        </Box>
+      </Modal>
+    </div>
   );
 };
