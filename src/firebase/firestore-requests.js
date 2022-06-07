@@ -269,3 +269,17 @@ export const requestDeleteComment = async (postId, comment) => {
     console.log(error);
   }
 };
+
+export const requestPostUpdate = async (postId, postText, postImage) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+
+    await updateDoc(postRef, {
+      postText: postText,
+      postImageUrl: postImage.url,
+      postImageName: postImage.postImageName,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
