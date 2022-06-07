@@ -6,9 +6,9 @@ import {
   Button,
   TextField,
   Box,
-  List,
 } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
@@ -254,6 +254,7 @@ export const Post = ({ post }) => {
           </Stack>
         </Box>
       )}
+      <Divider />
     </Box>
   );
 };
