@@ -72,6 +72,9 @@ const postSlice = createSlice({
         return post;
       });
     },
+    updatePostsForDelete: (state, action) => {
+      state.posts = state.posts.filter((_post) => _post.id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllPosts.fulfilled, (state, action) => {
@@ -85,6 +88,7 @@ export const {
   updateCommentInPost,
   deleteCommentInPost,
   updateDataInPost,
+  updatePostsForDelete,
 } = postSlice.actions;
 
 export default postSlice.reducer;

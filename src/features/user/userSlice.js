@@ -75,6 +75,11 @@ const userSlice = createSlice({
         (_id) => _id !== action.payload
       );
     },
+    deleteUserPost: (state, action) => {
+      state.userDetails.posts.posts = state.userDetails.posts.posts.filter(
+        (post) => post !== action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUserDetailss.pending, (state) => {
@@ -99,6 +104,7 @@ export const {
   updateUserUnlikedPost,
   updateUserBookmarkedPost,
   updateUserRemoveBookmarkedPost,
+  deleteUserPost,
 } = userSlice.actions;
 
 export default userSlice.reducer;
