@@ -13,6 +13,7 @@ import {
   query,
   orderBy,
   increment,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -278,6 +279,19 @@ export const requestPostUpdate = async (postId, postText, postImage) => {
       postText: postText,
       postImageUrl: postImage.url,
       postImageName: postImage.postImageName,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const requestDeletePost = async (postId, userId) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+    await deleteDoc(postRef);
+
+    const userPostRef = doc(db, userId, "posts");
+    await updateDoc(userPostRef, {
+      posts: arrayRemove(postId),
     });
   } catch (error) {
     console.log(error);
