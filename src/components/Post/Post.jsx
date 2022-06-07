@@ -24,6 +24,7 @@ import {
   updateLikedPost,
   updateCommentInPost,
   deleteCommentInPost,
+  updatePostsForDelete,
 } from "features/post/postSlice";
 import {
   requestLikePost,
@@ -32,6 +33,7 @@ import {
   requestRemovePostFromBookmark,
   requestAddComment,
   requestDeleteComment,
+  requestDeletePost,
 } from "../../firebase/firestore-requests";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -40,6 +42,7 @@ import {
   updateUserUnlikedPost,
   updateUserBookmarkedPost,
   updateUserRemoveBookmarkedPost,
+  deleteUserPost,
 } from "features/user/userSlice";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
@@ -97,6 +100,16 @@ export const Post = ({ post }) => {
     }
   };
 
+  const handleDeletePost = async () => {
+    try {
+      await requestDeletePost(post.id, token);
+      dispatch(deleteUserPost(post.id));
+      dispatch(updatePostsForDelete(post.id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const toggleComments = () => {
     setIsCommentsActive((prev) => !prev);
   };
@@ -131,7 +144,9 @@ export const Post = ({ post }) => {
             width="100%"
           >
             <Typography variant="caption">{postBy?.data?.email}</Typography>
-            {postBy?.id === token && <MenuPanel post={post} />}
+            {postBy?.id === token && (
+              <MenuPanel post={post} handleDeletePost={handleDeletePost} />
+            )}
           </Box>
 
           <Typography variant="body1" component="p">
@@ -140,7 +155,7 @@ export const Post = ({ post }) => {
           {post?.data?.postImageUrl && (
             <CardMedia
               component="img"
-              height="160"
+              height="auto"
               image={post?.data?.postImageUrl}
               alt="cover picture"
               style={{ maxWidth: "100%" }}
@@ -225,7 +240,7 @@ export const Post = ({ post }) => {
   );
 };
 
-const MenuPanel = ({ post }) => {
+const MenuPanel = ({ post, handleDeletePost }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -236,6 +251,7 @@ const MenuPanel = ({ post }) => {
   };
   const handleDelete = () => {
     handleClose();
+    handleDeletePost();
   };
   return (
     <div>
