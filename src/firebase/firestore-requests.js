@@ -12,6 +12,8 @@ import {
   addDoc,
   query,
   orderBy,
+  increment,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "./config";
 
@@ -168,3 +170,130 @@ export const fetchAllPosts = createAsyncThunk(
     return posts;
   }
 );
+
+export const requestLikePost = async (postId, userId, postBy) => {
+  try {
+    const userLikedPostRef = doc(db, userId, "likedPost");
+    const postDocRef = doc(db, "posts", postId);
+    const postByUserNotificationRef = doc(db, postBy, "notifications");
+
+    await updateDoc(postByUserNotificationRef, {
+      notifications: arrayUnion({
+        notificationType: "like",
+        postId,
+        notificationDetails: userId,
+      }),
+    });
+
+    await updateDoc(userLikedPostRef, {
+      likedPost: arrayUnion(postId),
+    });
+
+    await updateDoc(postDocRef, {
+      likes: increment(1),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestUnlikePost = async (postId, userId) => {
+  try {
+    const userLikedPostRef = doc(db, userId, "likedPost");
+    const postDocRef = doc(db, "posts", postId);
+
+    await updateDoc(userLikedPostRef, {
+      likedPost: arrayRemove(postId),
+    });
+
+    await updateDoc(postDocRef, {
+      likes: increment(-1),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestPostBookmark = async (postId, userId) => {
+  try {
+    const bookmarkDocRef = doc(db, userId, "bookmarks");
+
+    await updateDoc(bookmarkDocRef, {
+      bookmarks: arrayUnion(postId),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestRemovePostFromBookmark = async (postId, userId) => {
+  try {
+    const bookmarkDocRef = doc(db, userId, "bookmarks");
+
+    await updateDoc(bookmarkDocRef, {
+      bookmarks: arrayRemove(postId),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestAddComment = async (postId, comment, postBy) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+    const postByUserNotificationRef = doc(db, postBy, "notifications");
+
+    await updateDoc(postByUserNotificationRef, {
+      notifications: arrayUnion({
+        notificationType: "comment",
+        postId,
+        notificationDetails: comment.commentBy,
+      }),
+    });
+
+    await updateDoc(postRef, {
+      comments: arrayUnion(comment),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestDeleteComment = async (postId, comment) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+
+    await updateDoc(postRef, {
+      comments: arrayRemove(comment),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const requestPostUpdate = async (postId, postText, postImage) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+
+    await updateDoc(postRef, {
+      postText: postText,
+      postImageUrl: postImage.url,
+      postImageName: postImage.postImageName,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const requestDeletePost = async (postId, userId) => {
+  try {
+    const postRef = doc(db, "posts", postId);
+    await deleteDoc(postRef);
+
+    const userPostRef = doc(db, userId, "posts");
+    await updateDoc(userPostRef, {
+      posts: arrayRemove(postId),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
