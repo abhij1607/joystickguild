@@ -41,11 +41,6 @@ export const SideNav = () => {
       <SidebarLink Icon={HomeOutlinedIcon} text="Home" url="/" />
       <SidebarLink Icon={RocketOutlinedIcon} text="Explore" url="/explore" />
       <SidebarLink
-        Icon={NotificationsNoneOutlinedIcon}
-        text="Notifications"
-        url="/notification"
-      />
-      <SidebarLink
         Icon={BookmarkBorderOutlinedIcon}
         text="Bookmarks"
         url="bookmarks"
