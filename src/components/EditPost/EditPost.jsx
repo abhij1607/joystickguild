@@ -42,7 +42,7 @@ export const EditPost = ({ post }) => {
         }
       );
       const data = await res.json();
-      setPostImage({ url: data.url, fileName: data.original_filename });
+      setPostImage({ url: data.url, postImageName: data.original_filename });
     } catch (error) {
       console.log(error);
     }
@@ -72,19 +72,18 @@ export const EditPost = ({ post }) => {
       {postImage.url && (
         <img
           src={postImage.url}
-          alt={postImage.fileName}
-          loading="lazy"
+          alt={postImage.postImageName}
           height="auto"
           width="100%"
         />
       )}
       <Stack direction="row" mt={2}>
         <Container>
-          <label htmlFor="icon-button-file">
+          <label htmlFor="icon-image-edit">
             <input
               hidden
               accept="image/*"
-              id="icon-button-file"
+              id="icon-image-edit"
               type="file"
               onChange={(e) => handleImageUpload(e)}
             />

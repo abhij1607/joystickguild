@@ -77,7 +77,7 @@ export const AddPost = ({}) => {
   };
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" mb={1}>
       <Button disableRipple onClick={() => navigate("/profile")}>
         <Avatar
           sx={{

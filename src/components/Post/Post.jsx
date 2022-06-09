@@ -129,7 +129,6 @@ export const Post = ({ post }) => {
       console.log(error);
     }
   };
-  console.log(postBy);
   return (
     <Box mt={2}>
       <Stack direction="row">
