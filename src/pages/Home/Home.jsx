@@ -6,7 +6,7 @@ import { useState } from "react";
 import Divider from "@mui/material/Divider";
 import { FeedSortBy } from "components/SortBy/SortBy";
 
-const Home = () => {
+export const Home = () => {
   const [sortBy, setSortBy] = useState("LATEST");
   const { token } = useSelector((store) => store.authDetails);
   const {
@@ -33,4 +33,3 @@ const Home = () => {
     </>
   );
 };
-export { Home };

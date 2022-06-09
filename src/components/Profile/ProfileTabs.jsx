@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-
+import { Post } from "components/Post/Post";
 import { useSelector } from "react-redux";
 import { SuggestedUserCard } from "components/SuggestedUserCard/SuggestedUserCard";
 
@@ -40,8 +40,8 @@ function a11yProps(index) {
   };
 }
 
-export const Posts = () => {
-  return <div>Posts</div>;
+export const Posts = ({ posts }) => {
+  return posts?.map((post) => <Post key={post.id} post={post} />);
 };
 
 export const Connections = ({ users, token, followingUsers = [] }) => {
@@ -64,6 +64,12 @@ export const ProfileTabs = () => {
     userDetails: { following, followers },
   } = useSelector((store) => store.userDetails);
   const { users } = useSelector((store) => store.allUsers);
+
+  const { posts } = useSelector((store) => store.post);
+
+  const filterPostedByUser = posts?.filter(
+    (post) => post?.data?.postBy === token
+  );
 
   const followingUsers = users.filter((user) =>
     following?.following.includes(user.id)
@@ -91,7 +97,7 @@ export const ProfileTabs = () => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Posts />
+        <Posts posts={filterPostedByUser} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Connections
