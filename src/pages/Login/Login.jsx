@@ -32,10 +32,10 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(login(formData));
+      await dispatch(login(formData));
       navigate("/");
     } catch (error) {
       console.log(error);
